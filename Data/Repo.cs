@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using personalAPI.Models;
 
-namespace Data
+namespace personalAPI.Data
 {
     public abstract class Repo<TModel, TContext> : IRepo<TModel>
         where TContext : DbContext
@@ -33,12 +33,12 @@ namespace Data
             _context.Set<TModel>().Remove(entity);
         }
 
-        public ActionResult<TModel> Get(int id)
+        public TModel Get(int id)
         {
             return _context.Set<TModel>().FirstOrDefault( p => p.Id == id);
         }
 
-        public ActionResult<IEnumerable<TModel>> GetAll()
+        public IEnumerable<TModel> GetAll()
         {
             return _context.Set<TModel>().ToList();
         }
