@@ -24,8 +24,9 @@ namespace Controllers
         }
 
         [HttpGet("{Id}")]
-        public ActionResult<TModel> Get(int id){
-            var entity = _repo.Get(id);
+        [ActionName(nameof(Get))]
+        public ActionResult<TModel> Get(int Id){
+            var entity = _repo.Get(Id);
 
             if(entity!=null){
                 return Ok(entity);
@@ -36,8 +37,9 @@ namespace Controllers
         [HttpPost]
         public ActionResult Add(TModel entity){
             _repo.Add(entity);
-            return CreatedAtRoute(nameof(Add), new {Id = entity.Id});
-        }
+            _repo.SaveChanges();
+            return CreatedAtAction(nameof(Get), new {Id = entity.Id}, new{});
+        } 
 
         [HttpDelete("{id}")]
         public ActionResult deleteCommand(int id)

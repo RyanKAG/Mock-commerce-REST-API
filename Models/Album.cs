@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace personalAPI.Models
 {
-    public class Product : IModel
+    public class Album : IModel
     {
         public int Id { get; set; }
         [Required]
@@ -12,11 +12,14 @@ namespace personalAPI.Models
         [Required]
         [MinLength(4)]
         public string Title { get; set; }
+
         [Required]
         [MinLength(10)]
         public string Description { get; set; }
 
-        public List<Option> MyProperty { get; set; }
+        public string ImageUrl { get; set; }
+
+        public List<Artist> Artists { get; set; }
 
     }
 }
