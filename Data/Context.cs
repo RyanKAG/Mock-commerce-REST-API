@@ -7,11 +7,18 @@ namespace personalAPI.Data
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
-            
+
         }
 
-        public DbSet<Album> Albums {get; set;}
-        public DbSet<Artist> Artists {get; set;}
-        public DbSet<Genre> Genres {get; set;}
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Artist>()
+                .HasIndex(Artist => Artist.Name)
+                .IsUnique();
+        }
+
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Artist> Artists { get; set; }
+        public DbSet<Genre> Genres { get; set; }
     }
 }

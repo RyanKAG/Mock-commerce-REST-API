@@ -19,7 +19,7 @@ namespace Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TModel>> GetAll(){
+        public virtual ActionResult<IEnumerable<TModel>> GetAll(){
             return Ok(_repo.GetAll());
         }
 

@@ -6,11 +6,11 @@ namespace Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ArtistController : Controller<Album, AlbumRepo>
+    public class ArtistController : Controller<Artist, ArtistRepo>
     {
         // private readonly IRepo<Album> _repo;
 
-        public ArtistController(AlbumRepo repo) : base(repo)
+        public ArtistController(ArtistRepo repo) : base(repo)
         {
             
         }
