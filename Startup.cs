@@ -15,6 +15,7 @@ using personalAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.IdentityModel.Logging;
 
 namespace personalAPI
 {
@@ -30,6 +31,10 @@ namespace personalAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+            services.AddCors(op => {
+                op.AddPolicy("CorsPolicy", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build());
+            });
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -37,16 +42,17 @@ namespace personalAPI
             })
                 .AddJwtBearer(options =>
                 {
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = "http://localhost:5000",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretKey1234567891"))
                     };
                 });
+                
             string mySqlConnectionStr = Configuration.GetConnectionString("CommanderConnection");
             services.AddDbContext<Context>(x => x.UseNpgsql("Host=localhost;Database=commander;Username=postgres;Password=rn212121"));
             services.AddControllers();
@@ -61,6 +67,7 @@ namespace personalAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true; 
             }
 
             app.UseHttpsRedirection();

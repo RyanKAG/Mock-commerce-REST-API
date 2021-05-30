@@ -10,9 +10,9 @@ namespace personalAPI.Models
         [Required]
         public string Name { get; set; }
 
-        // [Required]
-        // [MinLength(8)]
-        // public string password { get; set; }
+        [Required]
+        [MinLength(8)]
+        public string password { get; set; }
 
         public IEnumerable<Album> Albums { get; set; }
     }

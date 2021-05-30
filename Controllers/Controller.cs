@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using personalAPI.Data;
 using personalAPI.Models;
@@ -19,6 +20,7 @@ namespace Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public virtual ActionResult<IEnumerable<TModel>> GetAll(){
             return Ok(_repo.GetAll());
         }

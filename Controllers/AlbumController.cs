@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using personalAPI.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using personalAPI.DTO;
 
 namespace Controllers
 {
@@ -17,12 +18,4 @@ namespace Controllers
             _repo = repo;
         }
 
-
-        [HttpGet]
-        [Authorize]
-        public override ActionResult<IEnumerable<Album>> GetAll(){
-            return Ok(new {test ='f'});
-        }
-
-    }
-}
+}}
