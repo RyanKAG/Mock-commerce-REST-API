@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace personalAPI.Data
 {
@@ -20,8 +21,14 @@ namespace personalAPI.Data
             _context = context;
         }
 
-        public Artist GetByName(string name){
+        public Artist GetByName(string name)
+        {
             return _context.Artists.FirstOrDefault(p => p.Name == name);
+        }
+
+        public override IEnumerable<Artist> GetAll(){
+            var artists = _context.Artists.AsNoTracking().Include(a => a.Albums).ToList();
+            return artists;
         }
 
     }

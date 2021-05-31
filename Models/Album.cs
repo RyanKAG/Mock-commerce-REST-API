@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace personalAPI.Models
 {
@@ -19,7 +20,7 @@ namespace personalAPI.Models
 
         public string ImageUrl { get; set; }
 
-        public List<Artist> Artists { get; set; }
+        public  List<Artist> Artists { get; set; }
 
     }
 }

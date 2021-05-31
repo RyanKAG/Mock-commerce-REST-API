@@ -11,11 +11,12 @@ namespace Controllers
     [ApiController]
     public class AlbumController : Controller<Album, AlbumRepo>
     {
-        private readonly IRepo<Album> _repo;
+        private readonly AlbumRepo _repo;
 
         public AlbumController(AlbumRepo repo) : base(repo)
         {
             _repo = repo;
         }
 
+    
 }}

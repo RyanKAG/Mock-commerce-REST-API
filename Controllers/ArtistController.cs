@@ -31,7 +31,6 @@ namespace Controllers
 
             var artist = _repo.GetByName(credintials.Name);
             bool isValid = BCrypt.Net.BCrypt.Verify(credintials.password, artist.password);
-            System.Console.WriteLine(isValid);
 
             if (isValid)
             {
@@ -42,7 +41,7 @@ namespace Controllers
                 claims: new List<Claim>() { new Claim("Id", artist.Id.ToString()) },
                 expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: signature
-            );
+                );
                 var token = new JwtSecurityTokenHandler().WriteToken(tokenOpts);
                 return Ok(new { Token = token });
             }

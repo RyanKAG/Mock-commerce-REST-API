@@ -13,9 +13,12 @@ namespace personalAPI.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Artist>()
+            .Property(i => i.Name).HasMaxLength(256);
+
+            builder.Entity<Artist>()
                 .HasIndex(Artist => Artist.Name)
                 .IsUnique();
-        }
+            }
 
         public DbSet<Album> Albums { get; set; }
         public DbSet<Artist> Artists { get; set; }

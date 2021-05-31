@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.IdentityModel.Logging;
-
+using Newtonsoft.Json;
 namespace personalAPI
 {
     public class Startup
@@ -31,8 +31,8 @@ namespace personalAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            services.AddCors(op => {
+            services.AddCors(op =>
+            {
                 op.AddPolicy("CorsPolicy", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build());
             });
             services.AddAuthentication(opt =>
@@ -52,10 +52,13 @@ namespace personalAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretKey1234567891"))
                     };
                 });
-                
+
             string mySqlConnectionStr = Configuration.GetConnectionString("CommanderConnection");
-            services.AddDbContext<Context>(x => x.UseNpgsql("Host=localhost;Database=commander;Username=postgres;Password=rn212121"));
-            services.AddControllers();
+            services.AddDbContext<Context>(x => x.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
+            services.AddControllers().AddNewtonsoftJson( options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                }); ;
 
             services.AddScoped<AlbumRepo>();
             services.AddScoped<ArtistRepo>();
@@ -67,7 +70,8 @@ namespace personalAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                IdentityModelEventSource.ShowPII = true; 
+                IdentityModelEventSource.ShowPII = true;
+                Environment.SetEnvironmentVariable("LOGIN_SECRET_KEY", "secretKey1234567891");
             }
 
             app.UseHttpsRedirection();

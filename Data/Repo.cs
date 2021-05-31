@@ -38,7 +38,7 @@ namespace personalAPI.Data
             return _context.Set<TModel>().FirstOrDefault( p => p.Id == id);
         }
 
-        public IEnumerable<TModel> GetAll()
+        public virtual IEnumerable<TModel> GetAll()
         {
             return _context.Set<TModel>().ToList();
         }
