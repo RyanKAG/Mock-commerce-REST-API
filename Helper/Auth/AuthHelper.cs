@@ -23,5 +23,7 @@ namespace personalAPI.Helper.Auth
 
             return new JwtSecurityTokenHandler().WriteToken(tokenOpts);
         }
+
+
     }
 }

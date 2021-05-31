@@ -8,41 +8,38 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using personalAPI.DTO.ArtistDto;
 
 namespace Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ArtistController : Controller<Artist, ArtistRepo>
+    public class ArtistController : BaseController<Artist, IArtistRepo>
     {
-        private readonly ArtistRepo _repo;
+        private readonly IArtistRepo _repo;
+        private readonly IMapper _mapper;
 
-        public ArtistController(ArtistRepo repo) : base(repo)
+        public ArtistController(IArtistRepo repo, IMapper mapper) : base(repo)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
 
         [HttpPost("login")]
-        public IActionResult Login(LoginDTO credintials)
+        public ActionResult Login(LoginDTO credintials)
         {
+            var artist = checkUser(credintials.Name, credintials.password);
 
-            var artist = _repo.GetByName(credintials.Name);
-            bool isValid = BCrypt.Net.BCrypt.Verify(credintials.password, artist.password);
-
-            if (isValid)
+            if (artist != null)
             {
-                var secKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretKey1234567891"));
-                var signature = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256);
+                var claims = new List<Claim>() {
+                    new Claim("Id", artist.Id.ToString())
+                    };
 
-                var tokenOpts = new JwtSecurityToken(
-                claims: new List<Claim>() { new Claim("Id", artist.Id.ToString()) },
-                expires: DateTime.Now.AddMinutes(60),
-                signingCredentials: signature
-                );
-                var token = new JwtSecurityTokenHandler().WriteToken(tokenOpts);
+                string token = AuthHelper.GenerateJWT(claims);
                 return Ok(new { Token = token });
             }
 
@@ -64,6 +61,27 @@ namespace Controllers
             return Ok();
         }
 
-    
+        private Artist checkUser(string name, string password)
+        {
+            var artist = _repo.GetByName(name);
+
+            if (artist == null)
+            {
+                return null;
+            }
+
+            bool isValid = BCrypt.Net.BCrypt.Verify(password, artist.password);
+            
+            return isValid ? artist : null;
+        }
+
+        
+        [HttpGet]
+        [Authorize]
+        public override ActionResult<IEnumerable<ArtistReadDto>> GetAll(){
+            var artists = _repo.GetAll();
+
+            return Ok(_mapper.Map<IEnumerable<ArtistReadDto>>(artists));
+        }
     }
 }

@@ -2,32 +2,33 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using personalAPI.Data;
+using personalAPI.DTO.ArtistDto;
 using personalAPI.Models;
 
 namespace Controllers
 {
     [Route("api/[controller]")]
     [ApiController]    
-    public abstract class Controller<TModel, TRepo> : ControllerBase
-    where TModel : class , IModel
-    where TRepo: IRepo<TModel>
+    public abstract class BaseController<TDto, TRepo> : ControllerBase
+    where TDto : class , IModel
+    where TRepo: IRepo<TDto>
     {
         private readonly TRepo _repo;
 
-        public Controller(TRepo repo)
+        public BaseController(TRepo repo)
         {
             _repo = repo;
         }
 
         [HttpGet]
         [Authorize]
-        public virtual ActionResult<IEnumerable<TModel>> GetAll(){
+        public virtual ActionResult<IEnumerable<ArtistReadDto>> GetAll(){
             return Ok(_repo.GetAll());
         }
 
         [HttpGet("{Id}")]
         [ActionName(nameof(Get))]
-        public ActionResult<TModel> Get(int Id){
+        public ActionResult<TDto> Get(int Id){
             var entity = _repo.Get(Id);
 
             if(entity!=null){
@@ -37,7 +38,7 @@ namespace Controllers
             return NotFound();
         }
         [HttpPost]
-        public ActionResult Add(TModel entity){
+        public ActionResult Add(TDto entity){
             _repo.Add(entity);
             _repo.SaveChanges();
             return CreatedAtAction(nameof(Get), new {Id = entity.Id}, new{});

@@ -22,5 +22,7 @@ namespace personalAPI.Models
 
         public  List<Artist> Artists { get; set; }
 
+        public Genre Genre {get; set;}
+
     }
 }

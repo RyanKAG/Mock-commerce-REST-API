@@ -49,7 +49,7 @@ namespace personalAPI
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretKey1234567891"))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("LOGIN_SECRET_KEY")))
                     };
                 });
 
@@ -60,8 +60,9 @@ namespace personalAPI
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 }); ;
 
-            services.AddScoped<AlbumRepo>();
-            services.AddScoped<ArtistRepo>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IAlbumRepo, AlbumRepo>();
+            services.AddScoped<IArtistRepo, ArtistRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

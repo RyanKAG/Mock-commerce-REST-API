@@ -7,13 +7,12 @@ using personalAPI.Models;
 
 namespace personalAPI.Data
 {
-    public abstract class Repo<TModel, TContext> : IRepo<TModel>
-        where TContext : DbContext
+    public abstract class Repo<TModel> : IRepo<TModel>
         where TModel : class , IModel
     {
-        private readonly TContext _context;
+        private readonly Context _context;
 
-        public Repo(TContext context)
+        public Repo(Context context)
         {
             _context = context;
         }
