@@ -78,7 +78,7 @@ namespace Controllers
         
         [HttpGet]
         [Authorize]
-        public override ActionResult<IEnumerable<ArtistReadDto>> GetAll(){
+        public override ActionResult<IEnumerable<Artist>> GetAll(){
             var artists = _repo.GetAll();
 
             return Ok(_mapper.Map<IEnumerable<ArtistReadDto>>(artists));

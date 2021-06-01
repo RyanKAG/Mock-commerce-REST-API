@@ -6,11 +6,11 @@ namespace Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GenreController : BaseController<Album, AlbumRepo>
+    public class GenreController : BaseController<Genre, IGenreRepo>
     {
-        // private readonly IRepo<Album> _repo;
+        private readonly IGenreRepo _repo;
 
-        public GenreController(AlbumRepo repo) : base(repo)
+        public GenreController(IGenreRepo repo) : base(repo)
         {
             
         }
